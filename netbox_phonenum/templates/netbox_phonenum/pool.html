@@ -73,6 +73,23 @@
                         <td>{{ object.is_pool }}</td>
                     </tr>
                     <tr>
+                        <td>Utilization</td>
+                        <td>
+                            {% if object.utilization is not None %}
+                                <div class="progress">
+                                    <div class="progress-bar {{ object.utilization_class }}" role="progressbar"
+                                         style="width: {{ object.utilization }}%"
+                                         aria-valuenow="{{ object.utilization }}" aria-valuemin="0" aria-valuemax="100">
+                                        {{ object.utilization }}%
+                                    </div>
+                                </div>
+                                <span class="text-muted">{{ object.used_count }} / {{ object.size }} numbers</span>
+                            {% else %}
+                                <span class="text-muted">None</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Description</td>
                         <td>{{ object.description }}</td>
                     </tr>

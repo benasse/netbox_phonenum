@@ -18,12 +18,29 @@ class PoolTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     forward_to = tables.LinkColumn()
+    utilization = tables.TemplateColumn(
+        template_code="""
+            {% if record.utilization is not None %}
+                <div class="progress">
+                    <div class="progress-bar {{ record.utilization_class }}" role="progressbar"
+                        style="width: {{ record.utilization }}%"
+                        aria-valuenow="{{ record.utilization }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ record.utilization }}%
+                    </div>
+                </div>
+            {% else %}
+                <span class="text-muted">&mdash;</span>
+            {% endif %}
+        """,
+        orderable=False,
+        verbose_name="Utilization",
+    )
     tags = columns.TagColumn()
 
     class Meta(BaseTable.Meta):
         model = Pool
         fields = ('pk', 'name', 'start', 'end', 'parent', 'tenant', 'site', 'region', 'description', 'provider',
-                  'forward_to', 'tags')
+                  'forward_to', 'utilization', 'tags')
 
 
 class VoiceCircuitTable(BaseTable):

@@ -89,6 +89,47 @@ class Pool(NetBoxModel):
     def is_pool(self):
         return self.start != self.end
 
+    @property
+    def size(self):
+        try:
+            start = int(str(self.start).strip())
+            end = int(str(self.end).strip())
+        except (TypeError, ValueError):
+            return None
+
+        if start > end:
+            return None
+
+        return end - start + 1
+
+    @property
+    def used_count(self):
+        if hasattr(self, "number_count"):
+            return self.number_count
+
+        return self.numbers.count()
+
+    @property
+    def utilization(self):
+        size = self.size
+        if not size:
+            return None
+
+        return min(round((self.used_count / size) * 100), 100)
+
+    @property
+    def utilization_class(self):
+        utilization = self.utilization
+        if utilization is None:
+            return ""
+
+        if utilization >= 90:
+            return "bg-danger"
+        if utilization >= 80:
+            return "bg-warning"
+
+        return "bg-success"
+
     def clean(self):
         if self.start > self.end:
             raise ValidationError("Start must be less than or equal to end.")
