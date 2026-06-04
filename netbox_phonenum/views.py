@@ -1,5 +1,5 @@
 import logging
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils.translation import gettext_lazy as _
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 @register_model_view(Pool, "list", path="", detail=False)
 class PoolListView(generic.ObjectListView):
-    queryset = Pool.objects.annotate(number_count=Count('numbers'))
+    queryset = Pool.objects.annotate(used_number_count=Count('numbers', filter=Q(numbers__is_used=True)))
     filterset = filters.PoolFilterSet
     filterset_form = forms.PoolFilterForm
     table = tables.PoolTable
@@ -21,7 +21,9 @@ class PoolListView(generic.ObjectListView):
 
 @register_model_view(Pool)
 class PoolView(generic.ObjectView):
-    queryset = Pool.objects.prefetch_related('parent').annotate(number_count=Count('numbers'))
+    queryset = Pool.objects.prefetch_related('parent').annotate(
+        used_number_count=Count('numbers', filter=Q(numbers__is_used=True))
+    )
     child_model = Pool
     template_name = "netbox_phonenum/pool.html"
     tab = ViewTab(

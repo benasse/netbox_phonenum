@@ -33,6 +33,7 @@ class Pool(NetBoxModel):
     )
     start = models.CharField(max_length=32, validators=[number_validator])
     end = models.CharField(max_length=32, validators=[number_validator])
+    is_used = models.BooleanField(default=True)
     tenant = models.ForeignKey(
         to='tenancy.Tenant',
         on_delete=models.CASCADE,
@@ -72,7 +73,7 @@ class Pool(NetBoxModel):
 
     objects = RestrictedQuerySet.as_manager()
 
-    csv_headers = ['start', 'end', 'tenant', 'site', 'region', 'description', 'provider', 'forward_to']
+    csv_headers = ['start', 'end', 'is_used', 'tenant', 'site', 'region', 'description', 'provider', 'forward_to']
 
     class Meta:
         ordering = ['start']
@@ -104,10 +105,19 @@ class Pool(NetBoxModel):
 
     @property
     def used_count(self):
-        if hasattr(self, "number_count"):
-            return self.number_count
+        if hasattr(self, "used_number_count"):
+            used_numbers = self.used_number_count
+        else:
+            used_numbers = self.numbers.filter(is_used=True).count()
 
-        return self.numbers.count()
+        used_children = 0
+        for child in self.children.all():
+            if child.is_used:
+                used_children += child.size or 0
+            else:
+                used_children += child.used_count
+
+        return used_numbers + used_children
 
     @property
     def utilization(self):
@@ -255,6 +265,7 @@ class VoiceCircuit(NetBoxModel):
 class Number(NetBoxModel):
     name = models.CharField(max_length=32, validators=[number_validator])
     description = models.CharField(max_length=50)
+    is_used = models.BooleanField(default=True)
 
     pool = models.ForeignKey(
         Pool,

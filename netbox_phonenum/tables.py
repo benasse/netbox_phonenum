@@ -11,6 +11,7 @@ class PoolTable(BaseTable):
     name = tables.LinkColumn()
     start = tables.LinkColumn()
     end = tables.LinkColumn()
+    is_used = tables.BooleanColumn(verbose_name="Used")
     parent = tables.LinkColumn()
     tenant = tables.LinkColumn()
     region = tables.LinkColumn()
@@ -18,6 +19,8 @@ class PoolTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     forward_to = tables.LinkColumn()
+    size = tables.Column(verbose_name="Range Size")
+    used_count = tables.Column(verbose_name="Used")
     utilization = tables.TemplateColumn(
         template_code="""
             {% if record.utilization is not None %}
@@ -39,8 +42,8 @@ class PoolTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Pool
-        fields = ('pk', 'name', 'start', 'end', 'parent', 'tenant', 'site', 'region', 'description', 'provider',
-                  'forward_to', 'utilization', 'tags')
+        fields = ('pk', 'name', 'start', 'end', 'is_used', 'parent', 'tenant', 'site', 'region', 'description', 'provider',
+                  'forward_to', 'size', 'used_count', 'utilization', 'tags')
 
 
 class VoiceCircuitTable(BaseTable):
@@ -71,6 +74,7 @@ class NumberTable(BaseTable):
     pk = ToggleColumn()
     name = tables.LinkColumn()
     description = tables.LinkColumn()
+    is_used = tables.BooleanColumn(verbose_name="Used")
     pool = tables.LinkColumn()
     
     tenant = tables.Column(
@@ -90,4 +94,4 @@ class NumberTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = Number
-        fields = ('pk', 'name', 'description', 'pool', 'tenant', 'site')
+        fields = ('pk', 'name', 'description', 'is_used', 'pool', 'tenant', 'site')

@@ -73,6 +73,24 @@
                         <td>{{ object.is_pool }}</td>
                     </tr>
                     <tr>
+                        <td>Used</td>
+                        <td>{{ object.is_used }}</td>
+                    </tr>
+                    <tr>
+                        <td>Range Size</td>
+                        <td>
+                            {% if object.size is not None %}
+                                {{ object.size }}
+                            {% else %}
+                                <span class="text-muted">None</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Used Numbers</td>
+                        <td>{{ object.used_count }}</td>
+                    </tr>
+                    <tr>
                         <td>Utilization</td>
                         <td>
                             {% if object.utilization is not None %}

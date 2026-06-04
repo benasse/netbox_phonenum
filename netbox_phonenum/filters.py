@@ -44,11 +44,15 @@ class PoolFilterSet(BaseFilterSet):
         to_field_name='pk',
         label='forward_to',
     )
+    is_used = django_filters.BooleanFilter(
+        field_name='is_used',
+        label='Used',
+    )
     tags = TagFilter(to_field_name='slug', field_name='tags__slug')
 
     class Meta():
         model = Pool
-        fields = ('end', 'start', 'parent', 'tags')
+        fields = ('end', 'start', 'parent', 'is_used', 'tags')
 
     def search(self, queryset, start, value):
         if not value.strip():
@@ -118,6 +122,10 @@ class NumberFilterSet(BaseFilterSet):
         to_field_name='name',
         label='name',
     )
+    is_used = django_filters.BooleanFilter(
+        field_name='is_used',
+        label='Used',
+    )
     
     pool = django_filters.ModelChoiceFilter(
         field_name='pool',
@@ -147,7 +155,7 @@ class NumberFilterSet(BaseFilterSet):
 
     class Meta():
         model = Number
-        fields = ('name',)
+        fields = ('name', 'is_used')
 
     def search(self, queryset, name, value):
         if not value.strip():

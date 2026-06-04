@@ -43,6 +43,7 @@ class PoolFilterForm(forms.Form):
         FieldSet(
             "start",
             "end",
+            "is_used",
             'status',
             'is_pool',
             name=_('Pool')
@@ -85,6 +86,11 @@ class PoolEditForm(NetBoxModelForm):
             }
         )
     )
+    is_used = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Used"
+    )
     parent = DynamicModelChoiceField(queryset=Pool.objects.all(), required=False)
     tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
 
@@ -95,8 +101,8 @@ class PoolEditForm(NetBoxModelForm):
 
     class Meta:
         model = Pool
-        fields = ('name', 'start', 'end', 'parent', 'tenant', 'site', 'region', 'description', 'provider', 'forward_to',
-                  'tags')
+        fields = ('name', 'start', 'end', 'is_used', 'parent', 'tenant', 'site', 'region', 'description', 'provider',
+                  'forward_to', 'tags')
 
 
 class PoolBulkEditForm(AddRemoveTagsForm, BulkEditForm):
@@ -138,6 +144,10 @@ class PoolBulkEditForm(AddRemoveTagsForm, BulkEditForm):
     description = forms.CharField(
         max_length=200,
         required=False
+    )
+    is_used = forms.NullBooleanField(
+        required=False,
+        label="Used"
     )
 
     class Meta:
@@ -407,12 +417,17 @@ class NumberEditForm(NetBoxModelForm):
             }
         )
     )
+    is_used = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Used"
+    )
     class Media:
         js = ('netbox_phonenum/js/edit_virtual_circuit.js',)
 
     class Meta:
         model = Number
-        fields = ('pool', 'name','description')
+        fields = ('pool', 'name', 'description', 'is_used')
     
     def clean(self):
         super().clean()
@@ -458,7 +473,7 @@ class NumberCSVForm(CSVModelForm):
     class Meta:
         model = Number
         fields = [
-            'name','description','pool']
+            'name', 'description', 'is_used', 'pool']
 
 class NumberBulkEditForm(BulkEditForm):
     pk = forms.ModelMultipleChoiceField(
@@ -469,6 +484,10 @@ class NumberBulkEditForm(BulkEditForm):
     description = forms.CharField(
         max_length=200,
         required=False
+    )
+    is_used = forms.NullBooleanField(
+        required=False,
+        label="Used"
     )
 
     class Meta:
@@ -494,4 +513,8 @@ class NumberFilterForm(forms.Form):
         to_field_name='id',
         required=False,
         null_option='None',
+    )
+    is_used = forms.NullBooleanField(
+        required=False,
+        label="Used"
     )

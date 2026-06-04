@@ -15,6 +15,9 @@ from ..models import VoiceCircuit, Pool, Number
 class PoolSerializer(NetBoxModelSerializer):
     start = serializers.CharField()
     end = serializers.CharField()
+    size = serializers.IntegerField(read_only=True, allow_null=True)
+    used_count = serializers.IntegerField(read_only=True)
+    utilization = serializers.IntegerField(read_only=True, allow_null=True)
     #parent = serializers.IntegerField(required=False, allow_null=True)
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Pool.objects.all(),
@@ -30,9 +33,10 @@ class PoolSerializer(NetBoxModelSerializer):
     class Meta:
         model = Pool
         fields = (
-            "id", "name", "url", "parent", "display", "start", "end", "tenant", "site", "region", "forward_to", "description", "provider", "tags",
+            "id", "name", "url", "parent", "display", "start", "end", "is_used", "size", "used_count", "utilization",
+            "tenant", "site", "region", "forward_to", "description", "provider", "tags",
         )
-        brief_fields = ("id", "url", "start", "end", "display")
+        brief_fields = ("id", "url", "start", "end", "display", "is_used", "size", "used_count", "utilization")
 
 class VoiceCircuitSerializer(NetBoxModelSerializer):
 
@@ -76,6 +80,6 @@ class NumberSerializer(NetBoxModelSerializer):
     class Meta:
         model = Number
         fields = (
-            "id", "name", "description", "pool"
+            "id", "name", "description", "is_used", "pool"
         )
-        brief_fields = ("id", "name")
+        brief_fields = ("id", "name", "is_used")
