@@ -38,7 +38,7 @@ class PoolTable(BaseTable):
         orderable=False,
         verbose_name="Utilization",
     )
-    tags = columns.TagColumn(orderable=False)
+    tags = columns.TagColumn()
 
     class Meta(BaseTable.Meta):
         model = Pool
@@ -66,7 +66,7 @@ class VoiceCircuitTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     simultaneous_calls = tables.Column(verbose_name='Simultaneous Calls')
-    tags = columns.TagColumn(orderable=False)
+    tags = columns.TagColumn()
 
     class Meta(BaseTable.Meta):
         model = VoiceCircuit

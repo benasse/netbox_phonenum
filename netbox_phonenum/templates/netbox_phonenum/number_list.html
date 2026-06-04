@@ -3,7 +3,8 @@
 {% load i18n %}
 
 {% block extra_controls %}
-    <button class="btn  -outline-secondary toggle-depth" type="button">
+    {{ block.super }}
+    <button class="btn btn-outline-secondary toggle-depth" type="button">
         {% trans "Hide Depth Indicators" %}
     </button>
     <div class="dropdown">
