@@ -161,8 +161,12 @@ class Pool(NetBoxModel):
         if self.start > self.end:
             raise ValidationError("Start must be less than or equal to end.")
 
-        if self.parent and not self.is_pool:
-            raise ValidationError("Cannot be assigned to parent is not a pool.")
+        if self.parent:
+            if not self.parent.is_pool:
+                raise ValidationError("Cannot be assigned to a parent that is not a pool.")
+
+            if self.start < self.parent.start or self.end > self.parent.end:
+                raise ValidationError("Child pool range must be within the parent pool range.")
 
         overlapping = Pool.objects.filter(
             parent=self.parent,
