@@ -39,17 +39,22 @@ class AddRemoveTagsForm(forms.Form):
 class PoolFilterForm(forms.Form):
     model = Pool
     fieldsets = (
-        FieldSet('q', 'filter_id', 'tag'),
-        FieldSet(
-            "start",
-            "end",
-            "is_used",
-            'status',
-            'is_pool',
-            name=_('Pool')
-        ),
-        FieldSet('tenant_group_id', 'tenant_id', name=_('Tenant')),
+        FieldSet('q', 'tags'),
+        FieldSet('start', 'end', 'parent', 'forward_to', 'is_used', name=_('Pool')),
+        FieldSet('tenant', name=_('Tenant')),
+        FieldSet('site', 'region', name=_('Location')),
+        FieldSet('provider', name=_('Provider')),
     )
+    q = forms.CharField(required=False, label='Search')
+    start = forms.CharField(required=False)
+    end = forms.CharField(required=False)
+    parent = DynamicModelMultipleChoiceField(queryset=Pool.objects.all(), required=False)
+    forward_to = DynamicModelMultipleChoiceField(queryset=Pool.objects.all(), required=False)
+    is_used = forms.NullBooleanField(required=False, label="Used")
+    tenant = DynamicModelMultipleChoiceField(queryset=Tenant.objects.all(), required=False)
+    site = DynamicModelMultipleChoiceField(queryset=Site.objects.all(), required=False)
+    region = DynamicModelMultipleChoiceField(queryset=Region.objects.all(), required=False)
+    provider = DynamicModelMultipleChoiceField(queryset=Provider.objects.all(), required=False)
     tags = TagFilterField(model)
 
 
