@@ -303,8 +303,10 @@ class Number(NetBoxModel):
 
     pool = models.ForeignKey(
         Pool,
-        on_delete=models.CASCADE,          
-        related_name='numbers'
+        on_delete=models.SET_NULL,
+        related_name='numbers',
+        blank=True,
+        null=True
     )
 
     def __str__(self):

@@ -411,7 +411,7 @@ class VoiceCircuitCSVForm(CSVModelForm):
 
 class NumberEditForm(NetBoxModelForm):
 
-    pool = DynamicModelChoiceField(queryset=Pool.objects.all(), required=True)
+    pool = DynamicModelChoiceField(queryset=Pool.objects.all(), required=False)
     name = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -486,6 +486,12 @@ class NumberEditForm(NetBoxModelForm):
         return cleaned
 
 class NumberCSVForm(CSVModelForm):
+    pool = CSVModelChoiceField(
+        queryset=Pool.objects.all(),
+        required=False,
+        to_field_name="pk"
+    )
+
     class Meta:
         model = Number
         fields = [
