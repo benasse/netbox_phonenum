@@ -19,8 +19,8 @@ class PoolTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     forward_to = tables.LinkColumn()
-    size = tables.Column(verbose_name="Pool Size")
-    used_count = tables.Column(verbose_name="Used")
+    size = tables.Column(verbose_name="Pool Size", orderable=False)
+    used_count = tables.Column(verbose_name="Used", orderable=False)
     utilization = tables.TemplateColumn(
         template_code="""
             {% if record.utilization is not None %}
@@ -38,7 +38,7 @@ class PoolTable(BaseTable):
         orderable=False,
         verbose_name="Utilization",
     )
-    tags = columns.TagColumn()
+    tags = columns.TagColumn(orderable=False)
 
     class Meta(BaseTable.Meta):
         model = Pool
@@ -66,7 +66,7 @@ class VoiceCircuitTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     simultaneous_calls = tables.Column(verbose_name='Simultaneous Calls')
-    tags = columns.TagColumn()
+    tags = columns.TagColumn(orderable=False)
 
     class Meta(BaseTable.Meta):
         model = VoiceCircuit
