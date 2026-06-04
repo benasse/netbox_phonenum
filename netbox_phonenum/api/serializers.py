@@ -50,6 +50,16 @@ class VoiceCircuitSerializer(NetBoxModelSerializer):
         required=False,
         allow_null=True
     )
+    pools = serializers.PrimaryKeyRelatedField(
+        queryset=Pool.objects.all(),
+        many=True,
+        required=False
+    )
+    numbers = serializers.PrimaryKeyRelatedField(
+        queryset=Number.objects.all(),
+        many=True,
+        required=False
+    )
     assigned_object = serializers.SerializerMethodField(read_only=True)
 
     @extend_schema_field(serializers.JSONField(allow_null=True))
@@ -65,7 +75,7 @@ class VoiceCircuitSerializer(NetBoxModelSerializer):
         fields = (
             "id", "url", "label", "display", "name", "voice_circuit_type", "tenant", "region", "site", "description",
             'assigned_object_type','assigned_object_id', 'assigned_object',
-            "sip_source", "sip_target", "provider", "provider_circuit_id", "simultaneous_calls", "tags",
+            "sip_source", "sip_target", "provider", "provider_circuit_id", "simultaneous_calls", "pools", "numbers", "tags",
         )
         brief_fields = ("id", "url", "name", "display")
 

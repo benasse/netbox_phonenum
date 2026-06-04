@@ -234,6 +234,14 @@ class VoiceCircuitEditForm(NetBoxModelForm):
         queryset=Tag.objects.all(),
         required=False
     )
+    pools = DynamicModelMultipleChoiceField(
+        queryset=Pool.objects.all(),
+        required=False
+    )
+    numbers = DynamicModelMultipleChoiceField(
+        queryset=Number.objects.all(),
+        required=False
+    )
 
     class Media:
         js = ('netbox_phonenum/js/edit_virtual_circuit.js',)
@@ -243,7 +251,7 @@ class VoiceCircuitEditForm(NetBoxModelForm):
         fields = (
             'name', 'voice_circuit_type', 'tenant', 'region', 'site',
             'description', 'provider', 'provider_circuit_id', 'tags',
-            'simultaneous_calls', 'sip_source', 'sip_target'
+            'simultaneous_calls', 'sip_source', 'sip_target', 'pools', 'numbers'
         )
 
     def __init__(self, *args, **kwargs):
@@ -329,6 +337,14 @@ class VoiceCircuitBulkEditForm(AddRemoveTagsForm, BulkEditForm):
     )
     description = forms.CharField(
         max_length=200,
+        required=False
+    )
+    pools = DynamicModelMultipleChoiceField(
+        queryset=Pool.objects.all(),
+        required=False
+    )
+    numbers = DynamicModelMultipleChoiceField(
+        queryset=Number.objects.all(),
         required=False
     )
     simultaneous_calls = forms.IntegerField(

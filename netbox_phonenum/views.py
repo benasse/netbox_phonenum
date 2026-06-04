@@ -1,8 +1,7 @@
 import logging
 from django.db.models import Count, Q
-from django.utils.translation import gettext_lazy as _
 from netbox.views import generic
-from utilities.views import ViewTab, register_model_view
+from utilities.views import register_model_view
 
 from . import filters
 from . import forms
@@ -24,25 +23,7 @@ class PoolView(generic.ObjectView):
     queryset = Pool.objects.prefetch_related('parent').annotate(
         used_number_count=Count('numbers', filter=Q(numbers__is_used=True))
     )
-    child_model = Pool
     template_name = "netbox_phonenum/pool.html"
-    tab = ViewTab(
-        label=_('Child pools'),
-        badge=lambda x: x.get_children().count(),
-        permission='plugins:netbox_phonenum.view_pool',
-        weight=600
-    )
-  
-@register_model_view(Pool, name='numbers', path='numbers')
-class PoolNumbersView(generic.ObjectView):
-    queryset = Pool.objects.all()
-    template_name = "netbox_phonenum/pool_numbers.html"
-    tab = ViewTab(
-        label=_('Numbers'),
-        badge=lambda obj: obj.numbers.count(),            
-        permission='plugins:netbox_phonenum.view_number', 
-        weight=610,
-    )
 
 @register_model_view(Pool, "add", detail=False)
 @register_model_view(Pool, "edit")
@@ -80,7 +61,7 @@ class PoolBulkImportView(generic.BulkImportView):
 
 @register_model_view(VoiceCircuit, "list", path="", detail=False)
 class VoiceCircuitListView(generic.ObjectListView):
-    queryset = VoiceCircuit.objects.all()
+    queryset = VoiceCircuit.objects.prefetch_related('pools', 'numbers')
     filterset = filters.VoiceCircuitFilterSet
     filterset_form = forms.VoiceCircuitFilterForm
     table = tables.VoiceCircuitTable
@@ -88,7 +69,7 @@ class VoiceCircuitListView(generic.ObjectListView):
 
 @register_model_view(VoiceCircuit)
 class VoiceCircuitView(generic.ObjectView):
-    queryset = VoiceCircuit.objects.prefetch_related('tenant')
+    queryset = VoiceCircuit.objects.prefetch_related('tenant', 'pools', 'numbers')
     template_name = "netbox_phonenum/voicecircuit.html"
 
 
@@ -101,7 +82,7 @@ class VoiceCircuitEditView(generic.ObjectEditView):
 
 @register_model_view(VoiceCircuit, "bulk_edit", path="edit", detail=False)
 class VoiceCircuitBulkEditView(generic.BulkEditView):
-    queryset = VoiceCircuit.objects.prefetch_related('tenant')
+    queryset = VoiceCircuit.objects.prefetch_related('tenant', 'pools', 'numbers')
     filterset = filters.VoiceCircuitFilterSet
     table = tables.VoiceCircuitTable
     form = forms.VoiceCircuitBulkEditForm

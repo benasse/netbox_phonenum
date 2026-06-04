@@ -105,6 +105,9 @@ class Pool(NetBoxModel):
 
     @property
     def used_count(self):
+        if self.is_used and not self.children.exists() and not self.numbers.exists():
+            return self.size or 0
+
         if hasattr(self, "used_number_count"):
             used_numbers = self.used_number_count
         else:
@@ -250,10 +253,23 @@ class VoiceCircuit(NetBoxModel):
         ct_field='assigned_object_type',
         fk_field='assigned_object_id'
     )
+    pools = models.ManyToManyField(
+        Pool,
+        blank=True,
+        related_name='voice_circuits'
+    )
+    numbers = models.ManyToManyField(
+        'Number',
+        blank=True,
+        related_name='voice_circuits'
+    )
 
     objects = RestrictedQuerySet.as_manager()
 
-    csv_headers = ['name', 'voice_circuit_type', 'tenant', 'region', 'site', 'description', 'provider', 'provider_circuit_id', 'simultaneous_calls']
+    csv_headers = [
+        'name', 'voice_circuit_type', 'tenant', 'region', 'site', 'description', 'provider', 'provider_circuit_id',
+        'simultaneous_calls'
+    ]
 
     def __str__(self):
         return str(self.name)

@@ -51,7 +51,7 @@
                 <tr>
                     <td>Site</td>
                     <td>
-                        {% if object.forward_to %}
+                        {% if object.site %}
                             <a href="{{ object.site.get_absolute_url }}">{{ object.site }}</a>
                         {% else %}
                             <span class="text-muted">None</span>
@@ -75,6 +75,26 @@
                 <tr>
                     <td>Description</td>
                     <td>{{ object.description }}</td>
+                </tr>
+                <tr>
+                    <td>Pools</td>
+                    <td>
+                        {% for pool in object.pools.all %}
+                            <a href="{{ pool.get_absolute_url }}">{{ pool }}</a>{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            <span class="text-muted">None</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Numbers</td>
+                    <td>
+                        {% for number in object.numbers.all %}
+                            <a href="{{ number.get_absolute_url }}">{{ number }}</a>{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            <span class="text-muted">None</span>
+                        {% endfor %}
+                    </td>
                 </tr>
             </table>
         </div>
