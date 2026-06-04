@@ -19,7 +19,7 @@ class PoolTable(BaseTable):
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
     forward_to = tables.LinkColumn()
-    size = tables.Column(verbose_name="Range Size")
+    size = tables.Column(verbose_name="Pool Size")
     used_count = tables.Column(verbose_name="Used")
     utilization = tables.TemplateColumn(
         template_code="""
@@ -44,6 +44,10 @@ class PoolTable(BaseTable):
         model = Pool
         fields = ('pk', 'name', 'start', 'end', 'is_used', 'parent', 'tenant', 'site', 'region', 'description', 'provider',
                   'forward_to', 'size', 'used_count', 'utilization', 'tags')
+        default_columns = (
+            'pk', 'name', 'start', 'end', 'is_used', 'parent', 'tenant', 'site', 'region',
+            'description', 'provider', 'size', 'used_count', 'utilization', 'tags'
+        )
 
 
 class VoiceCircuitTable(BaseTable):
