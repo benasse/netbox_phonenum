@@ -13,11 +13,12 @@
         <div class="col col-md-6">
             <div class="card">
                 <h5 class="card-header">
-                    {% trans "Information" %}             </h5>
-                <table class="table table-hover panel-body attr-table">
-                    <tr>
-                        <td>Tenant</td>
-                        <td>
+                    {% trans "Information" %}
+                </h5>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Tenant" %}</div>
                             {% if object.tenant %}
                                 {% if object.tenant.group %}
                                     <a href="{{ object.tenant.group.get_absolute_url }}">{{ object.tenant.group }}</a> /
@@ -26,92 +27,90 @@
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Region</td>
-                        <td>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Region" %}</div>
                             {% if object.region %}
                                 <a href="{{ object.region.get_absolute_url }}">{{ object.region }}</a>
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Site</td>
-                        <td>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Site" %}</div>
                             {% if object.site %}
                                 <a href="{{ object.site.get_absolute_url }}">{{ object.site }}</a>
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Provider</td>
-                        <td>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Provider" %}</div>
                             {% if object.provider %}
                                 <a href="{{ object.provider.get_absolute_url }}">{{ object.provider }}</a>
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Forward To</td>
-                        <td>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Forward To" %}</div>
                             {% if object.forward_to %}
                                 <a href="{{ object.forward_to.get_absolute_url }}">{{ object.forward_to }}</a>
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Is pool</td>
-                        <td>{{ object.is_pool }}</td>
-                    </tr>
-                    <tr>
-                        <td>Used</td>
-                        <td>{{ object.is_used }}</td>
-                    </tr>
-                    <tr>
-                        <td>Range Size</td>
-                        <td>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Status" %}</div>
+                            {% if object.is_pool %}
+                                <span class="badge text-bg-primary">{% trans "Pool" %}</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">{% trans "Single number" %}</span>
+                            {% endif %}
+                            {% if object.is_used %}
+                                <span class="badge text-bg-success">{% trans "Used" %}</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">{% trans "Available" %}</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Range Size" %}</div>
                             {% if object.size is not None %}
                                 {{ object.size }}
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Used Numbers</td>
-                        <td>{{ object.used_count }}</td>
-                    </tr>
-                    <tr>
-                        <td>Utilization</td>
-                        <td>
-                            {% if object.utilization is not None %}
-                                <div class="progress">
-                                    <div class="progress-bar {{ object.utilization_class }}" role="progressbar"
-                                         style="width: {{ object.utilization }}%"
-                                         aria-valuenow="{{ object.utilization }}" aria-valuemin="0" aria-valuemax="100">
-                                        {{ object.utilization }}%
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted">{% trans "Used Numbers" %}</div>
+                            {{ object.used_count }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <div class="text-muted mb-1">{% trans "Utilization" %}</div>
+                        {% if object.utilization is not None %}
+                            <div class="progress">
+                                <div class="progress-bar {{ object.utilization_class }}" role="progressbar"
+                                     style="width: {{ object.utilization }}%"
+                                     aria-valuenow="{{ object.utilization }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ object.utilization }}%
                                 </div>
-                                <span class="text-muted">{{ object.used_count }} / {{ object.size }} numbers</span>
-                            {% else %}
-                                <span class="text-muted">None</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Description</td>
-                        <td>{{ object.description }}</td>
-                    </tr>
-                </table>
+                            </div>
+                            <span class="text-muted">{{ object.used_count }} / {{ object.size }} numbers</span>
+                        {% else %}
+                            <span class="text-muted">None</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="text-muted mb-1">{% trans "Description" %}</div>
+                        {% if object.description %}
+                            {{ object.description|linebreaksbr }}
+                        {% else %}
+                            <span class="text-muted">None</span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col col-md-6">
