@@ -12,7 +12,6 @@ class PhoneNumConfig(PluginConfig):
     author_email = 'jeremythorson@gmail.com'
     base_url = 'phonenum'
     min_version = "4.4.0"
-    max_version = "4.5.99"
     required_settings = []
     default_settings = {}
     caching_config = {
