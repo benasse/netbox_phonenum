@@ -1,5 +1,4 @@
 import logging
-from django.db.models import Count, Q
 from netbox.views import generic
 from utilities.views import register_model_view
 
@@ -7,11 +6,12 @@ from . import filters
 from . import forms
 from . import tables
 from .models import VoiceCircuit, Pool, Number
+from .querysets import pool_usage_queryset
 logger = logging.getLogger(__name__)
 
 @register_model_view(Pool, "list", path="", detail=False)
 class PoolListView(generic.ObjectListView):
-    queryset = Pool.objects.annotate(used_number_count=Count('numbers', filter=Q(numbers__is_used=True)))
+    queryset = pool_usage_queryset()
     filterset = filters.PoolFilterSet
     filterset_form = forms.PoolFilterForm
     table = tables.PoolTable
@@ -20,9 +20,7 @@ class PoolListView(generic.ObjectListView):
 
 @register_model_view(Pool)
 class PoolView(generic.ObjectView):
-    queryset = Pool.objects.prefetch_related('parent').annotate(
-        used_number_count=Count('numbers', filter=Q(numbers__is_used=True))
-    )
+    queryset = pool_usage_queryset()
     template_name = "netbox_phonenum/pool.html"
 
 @register_model_view(Pool, "add", detail=False)
@@ -34,7 +32,7 @@ class PoolEditView(generic.ObjectEditView):
 
 @register_model_view(Pool, "bulk_edit", path="edit", detail=False)
 class PoolBulkEditView(generic.BulkEditView):
-    queryset = Pool.objects.prefetch_related('parent')
+    queryset = pool_usage_queryset()
     filterset = filters.PoolFilterSet
     table = tables.PoolTable
     form = forms.PoolBulkEditForm

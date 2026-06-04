@@ -105,7 +105,17 @@ class Pool(NetBoxModel):
 
     @property
     def used_count(self):
-        if self.is_used and not self.children.exists() and not self.numbers.exists():
+        if hasattr(self, "number_count"):
+            number_count = self.number_count
+        else:
+            number_count = self.numbers.count()
+
+        if hasattr(self, "child_pool_count"):
+            child_pool_count = self.child_pool_count
+        else:
+            child_pool_count = self.children.count()
+
+        if self.is_used and child_pool_count == 0 and number_count == 0:
             return self.size or 0
 
         if hasattr(self, "used_number_count"):
@@ -114,7 +124,11 @@ class Pool(NetBoxModel):
             used_numbers = self.numbers.filter(is_used=True).count()
 
         used_children = 0
-        for child in self.children.all():
+        children = self._prefetched_objects_cache.get("children") if hasattr(self, "_prefetched_objects_cache") else None
+        if children is None:
+            children = self.children.all()
+
+        for child in children:
             if child.is_used:
                 used_children += child.size or 0
             else:
