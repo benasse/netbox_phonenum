@@ -37,14 +37,14 @@ class PoolSerializer(NetBoxModelSerializer):
 class VoiceCircuitSerializer(NetBoxModelSerializer):
 
     label = serializers.CharField(source='voice_circuit', read_only=True)
-    tenant = TenantSerializer(required=True, allow_null=False, nested=True)
+    tenant = TenantSerializer(required=False, allow_null=True, nested=True)
     region = RegionSerializer(required=False, allow_null=True, nested=True)
     site = SiteSerializer(required=False, allow_null=True, nested=True)
     provider = ProviderSerializer(required=False, allow_null=True, nested=True)
     assigned_object_type = ContentTypeField(
         queryset=ContentType.objects.filter(VOICE_CIRCUIT_ASSIGNMENT_MODELS),
-        required=True,
-        allow_null=False
+        required=False,
+        allow_null=True
     )
     assigned_object = serializers.SerializerMethodField(read_only=True)
 
@@ -61,7 +61,7 @@ class VoiceCircuitSerializer(NetBoxModelSerializer):
         fields = (
             "id", "url", "label", "display", "name", "voice_circuit_type", "tenant", "region", "site", "description",
             'assigned_object_type','assigned_object_id', 'assigned_object',
-            "sip_source", "sip_target", "provider", "tags",
+            "sip_source", "sip_target", "provider", "provider_circuit_id", "tags",
         )
         brief_fields = ("id", "url", "name", "display")
 
