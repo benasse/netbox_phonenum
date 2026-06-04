@@ -67,6 +67,7 @@ class VoiceCircuitSerializer(NetBoxModelSerializer):
 
 
 class NumberSerializer(NetBoxModelSerializer):
+    name = serializers.CharField()
     pool = serializers.PrimaryKeyRelatedField(
         queryset=Pool.objects.all(),
         required=False,
@@ -75,6 +76,6 @@ class NumberSerializer(NetBoxModelSerializer):
     class Meta:
         model = Number
         fields = (
-            "id", "description", 'pool'
+            "id", "name", "description", "pool"
         )
-        brief_fields = ("id")
+        brief_fields = ("id", "name")
