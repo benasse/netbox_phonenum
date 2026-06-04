@@ -61,7 +61,7 @@ class VoiceCircuitSerializer(NetBoxModelSerializer):
         fields = (
             "id", "url", "label", "display", "name", "voice_circuit_type", "tenant", "region", "site", "description",
             'assigned_object_type','assigned_object_id', 'assigned_object',
-            "sip_source", "sip_target", "provider", "provider_circuit_id", "tags",
+            "sip_source", "sip_target", "provider", "provider_circuit_id", "simultaneous_calls", "tags",
         )
         brief_fields = ("id", "url", "name", "display")
 

@@ -195,6 +195,10 @@ class VoiceCircuit(NetBoxModel):
         max_length=50,
         blank=True
     )
+    simultaneous_calls = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
     region = models.ForeignKey(
         to="dcim.Region",
         on_delete=models.SET_NULL,
@@ -239,7 +243,7 @@ class VoiceCircuit(NetBoxModel):
 
     objects = RestrictedQuerySet.as_manager()
 
-    csv_headers = ['name', 'voice_circuit_type', 'tenant', 'region', 'site', 'description', 'provider']
+    csv_headers = ['name', 'voice_circuit_type', 'tenant', 'region', 'site', 'description', 'provider', 'provider_circuit_id', 'simultaneous_calls']
 
     def __str__(self):
         return str(self.name)

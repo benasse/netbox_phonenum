@@ -233,7 +233,7 @@ class VoiceCircuitEditForm(NetBoxModelForm):
         fields = (
             'name', 'voice_circuit_type', 'tenant', 'region', 'site',
             'description', 'provider', 'provider_circuit_id', 'tags',
-            'sip_source', 'sip_target'
+            'simultaneous_calls', 'sip_source', 'sip_target'
         )
 
     def __init__(self, *args, **kwargs):
@@ -321,9 +321,13 @@ class VoiceCircuitBulkEditForm(AddRemoveTagsForm, BulkEditForm):
         max_length=200,
         required=False
     )
+    simultaneous_calls = forms.IntegerField(
+        min_value=0,
+        required=False
+    )
 
     class Meta:
-        nullable_fields = ('region', 'provider', 'description')
+        nullable_fields = ('region', 'provider', 'description', 'simultaneous_calls')
 
 
 class VoiceCircuitCSVForm(CSVModelForm):
@@ -375,7 +379,7 @@ class VoiceCircuitCSVForm(CSVModelForm):
         fields = [
             'name', 'voice_circuit_type', 'tenant', 'region', 'site',
             'description', 'provider', 'provider_circuit_id', 'device',
-            'virtual_machine', 'interface',
+            'virtual_machine', 'interface', 'simultaneous_calls',
         ]
 
 

@@ -53,16 +53,18 @@ class VoiceCircuitTable(BaseTable):
         verbose_name='Device/VM'
     )
     voice_circuit_type = tables.LinkColumn()
+    description = tables.Column()
     tenant = tables.LinkColumn()
     region = tables.LinkColumn()
     site = tables.LinkColumn()
     provider = tables.LinkColumn()
+    simultaneous_calls = tables.Column(verbose_name='Simultaneous Calls')
     tags = columns.TagColumn()
 
     class Meta(BaseTable.Meta):
         model = VoiceCircuit
-        fields = ('pk', 'name', 'voice_device_or_vm', 'voice_circuit_type', 'tenant', 'region', 'site', 'provider',
-                  'tags')
+        fields = ('pk', 'name', 'voice_device_or_vm', 'voice_circuit_type', 'description', 'tenant', 'region', 'site',
+                  'provider', 'simultaneous_calls', 'tags')
 
 
 class NumberTable(BaseTable):

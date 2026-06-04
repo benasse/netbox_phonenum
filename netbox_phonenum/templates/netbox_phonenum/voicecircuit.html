@@ -70,7 +70,7 @@
                 </tr>
                 <tr>
                     <td>Provider Circuit ID</td>
-                    <td>{{ object.provider_ciruit_id }}</td>
+                    <td>{{ object.provider_circuit_id }}</td>
                 </tr>
                 <tr>
                     <td>Description</td>
@@ -95,6 +95,16 @@
                         <tr>
                             <td>Target</td>
                             <td>{{ object.sip_target }}</td>
+                        </tr>
+                        <tr>
+                            <td>Simultaneous Calls</td>
+                            <td>
+                                {% if object.simultaneous_calls is not None %}
+                                    {{ object.simultaneous_calls }}
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </td>
                         </tr>
                     </table>
                 </div>
