@@ -417,6 +417,7 @@ class VoiceCircuitCSVForm(CSVModelForm):
 class NumberEditForm(NetBoxModelForm):
 
     pool = DynamicModelChoiceField(queryset=Pool.objects.all(), required=False)
+    tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
     name = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -448,7 +449,7 @@ class NumberEditForm(NetBoxModelForm):
 
     class Meta:
         model = Number
-        fields = ('pool', 'name', 'description', 'is_used')
+        fields = ('pool', 'tenant', 'name', 'description', 'is_used')
     
     def clean(self):
         super().clean()
@@ -456,6 +457,10 @@ class NumberEditForm(NetBoxModelForm):
 
         pool = cleaned.get("pool") or getattr(self.instance, "pool", None)
         name = cleaned.get("name")
+
+        if pool:
+            cleaned["tenant"] = pool.tenant
+            self.instance.tenant = pool.tenant
 
         if not pool or name in (None, ""):
             return cleaned
@@ -496,11 +501,17 @@ class NumberCSVForm(CSVModelForm):
         required=False,
         to_field_name="pk"
     )
+    tenant = CSVModelChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        to_field_name='name',
+        help_text='Assigned tenant for numbers without a pool'
+    )
 
     class Meta:
         model = Number
         fields = [
-            'name', 'description', 'is_used', 'pool']
+            'name', 'description', 'is_used', 'pool', 'tenant']
 
 class NumberBulkEditForm(BulkEditForm):
     pk = forms.ModelMultipleChoiceField(
@@ -516,9 +527,15 @@ class NumberBulkEditForm(BulkEditForm):
         required=False,
         label="Used"
     )
+    tenant = DynamicModelChoiceField(
+        queryset=Tenant.objects.all(),
+        to_field_name='id',
+        required=False,
+        null_option='None',
+    )
 
     class Meta:
-        nullable_fields = ('description')
+        nullable_fields = ('description', 'tenant')
 
 class NumberFilterForm(forms.Form):
     model = Number

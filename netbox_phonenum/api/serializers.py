@@ -87,9 +87,11 @@ class NumberSerializer(NetBoxModelSerializer):
         required=False,
         allow_null=True
     )
+    tenant = TenantSerializer(required=False, allow_null=True, nested=True)
+
     class Meta:
         model = Number
         fields = (
-            "id", "name", "description", "is_used", "pool"
+            "id", "name", "description", "is_used", "pool", "tenant"
         )
-        brief_fields = ("id", "name", "is_used")
+        brief_fields = ("id", "name", "is_used", "tenant")

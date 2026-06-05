@@ -86,6 +86,11 @@ class Pool(NetBoxModel):
     def get_absolute_url(self):
         return reverse("plugins:netbox_phonenum:pool", kwargs={"pk": self.pk})
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        self.numbers.exclude(tenant=self.tenant).update(tenant=self.tenant)
+
     @property
     def is_pool(self):
         return self.start != self.end
@@ -300,6 +305,13 @@ class Number(NetBoxModel):
     name = models.CharField(max_length=32, validators=[number_validator])
     description = models.CharField(max_length=50)
     is_used = models.BooleanField(default=True)
+    tenant = models.ForeignKey(
+        to='tenancy.Tenant',
+        on_delete=models.CASCADE,
+        related_name='phone_numbers',
+        blank=True,
+        null=True
+    )
 
     pool = models.ForeignKey(
         Pool,
@@ -314,3 +326,19 @@ class Number(NetBoxModel):
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_phonenum:number", kwargs={"pk": self.pk})
+
+    @property
+    def effective_tenant(self):
+        if self.pool and self.pool.tenant:
+            return self.pool.tenant
+
+        return self.tenant
+
+    def save(self, *args, **kwargs):
+        if self.pool:
+            self.tenant = self.pool.tenant
+            update_fields = kwargs.get("update_fields")
+            if update_fields is not None and "tenant" not in update_fields:
+                kwargs["update_fields"] = [*update_fields, "tenant"]
+
+        super().save(*args, **kwargs)

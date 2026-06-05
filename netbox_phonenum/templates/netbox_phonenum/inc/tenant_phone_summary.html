@@ -18,16 +18,14 @@
         <tr>
             <th scope="row">Numbers</th>
             <td class="text-end">
-                <a href="{% url 'plugins:netbox_phonenum:number_list' %}?tenant={{ object.pk }}">
-                    <span class="badge text-bg-primary">{{ number_count }}</span>
-                </a>
+                <span class="badge text-bg-primary">{{ number_count }}</span>
             </td>
         </tr>
         <tr>
-            <th scope="row">Used Numbers</th>
+            <th scope="row">Standalone Numbers</th>
             <td class="text-end">
-                <a href="{% url 'plugins:netbox_phonenum:number_list' %}?tenant={{ object.pk }}&is_used=true">
-                    <span class="badge text-bg-primary">{{ used_number_count }}</span>
+                <a href="{% url 'plugins:netbox_phonenum:number_list' %}?tenant={{ object.pk }}&pool_id=null">
+                    <span class="badge text-bg-primary">{{ standalone_number_count }}</span>
                 </a>
             </td>
         </tr>

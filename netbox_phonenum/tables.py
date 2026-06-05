@@ -82,10 +82,10 @@ class NumberTable(BaseTable):
     pool = tables.LinkColumn()
     
     tenant = tables.Column(
-        accessor='pool.tenant',
+        accessor='effective_tenant',
         linkify=True,
         verbose_name='Tenant',
-        order_by=('pool__tenant__name',),
+        order_by=('tenant__name', 'pool__tenant__name'),
     )
 
     site = tables.Column(

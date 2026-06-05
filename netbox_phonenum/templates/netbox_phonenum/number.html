@@ -29,8 +29,8 @@
                      <tr>
                         <td>Tenant</td>
                         <td>
-                            {% if object.pool and object.pool.tenant %}
-                                <a href="{{ object.pool.tenant.get_absolute_url }}">{{ object.pool.tenant }}</a>
+                            {% if object.effective_tenant %}
+                                <a href="{{ object.effective_tenant.get_absolute_url }}">{{ object.effective_tenant }}</a>
                             {% else %}
                                 <span class="text-muted">None</span>
                             {% endif %}

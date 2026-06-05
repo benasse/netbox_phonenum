@@ -133,9 +133,10 @@ class NumberFilterSet(BaseFilterSet):
         label='Pool',
     )
 
-    tenant = django_filters.ModelChoiceFilter(
-        field_name='pool__tenant',
+    tenant = django_filters.ModelMultipleChoiceFilter(
+        method='filter_tenant',
         queryset=Tenant.objects.all(),
+        to_field_name='id',
         label='Tenant',
     )
 
@@ -146,10 +147,8 @@ class NumberFilterSet(BaseFilterSet):
         label='description',
     )
     
-    pool_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='pool',
-        queryset=Pool.objects.all(),
-        to_field_name='id',
+    pool_id = django_filters.CharFilter(
+        method='filter_pool_id',
         label='Pool (IDs)',
     )
 
@@ -163,3 +162,29 @@ class NumberFilterSet(BaseFilterSet):
         return queryset.filter(
             Q(name__icontains=value)
         )
+
+    def filter_tenant(self, queryset, name, value):
+        tenant_ids = [tenant.pk for tenant in value]
+
+        if not tenant_ids:
+            return queryset
+
+        return queryset.filter(
+            Q(pool__tenant_id__in=tenant_ids) | Q(tenant_id__in=tenant_ids)
+        ).distinct()
+
+    def filter_pool_id(self, queryset, name, value):
+        values = self.data.getlist(name) if hasattr(self.data, "getlist") else [value]
+        pool_ids = [item for item in values if item not in ("", "null", None)]
+        include_null = any(item == "null" for item in values)
+
+        query = Q()
+        if pool_ids:
+            query |= Q(pool_id__in=pool_ids)
+        if include_null:
+            query |= Q(pool__isnull=True)
+
+        if not query:
+            return queryset
+
+        return queryset.filter(query)

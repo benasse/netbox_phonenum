@@ -108,13 +108,13 @@ class VoiceCircuitBulkImportView(generic.BulkImportView):
 class NumberView(generic.ObjectView):
     queryset = (
         Number.objects
-        .prefetch_related('pool')
+        .select_related('pool', 'tenant', 'pool__tenant', 'pool__site')
     )
     template_name = "netbox_phonenum/number.html"
 
 @register_model_view(Number, "list", path="", detail=False)
 class NumberListView(generic.ObjectListView):
-    queryset = Number.objects.select_related('pool', 'pool__tenant', 'pool__site')
+    queryset = Number.objects.select_related('pool', 'tenant', 'pool__tenant', 'pool__site')
     filterset = filters.NumberFilterSet
     filterset_form = forms.NumberFilterForm
     table = tables.NumberTable
