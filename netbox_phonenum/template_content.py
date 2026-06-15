@@ -30,4 +30,23 @@ class TenantPhoneNumberSummary(PluginTemplateExtension):
         )
 
 
-template_extensions = [TenantPhoneNumberSummary]
+class DevicePoolLink(PluginTemplateExtension):
+    models = ["dcim.device"]
+
+    def right_page(self):
+        device = self.context["object"]
+        pools = Pool.objects.filter(device=device).select_related("provider", "forward_to")
+
+        if not pools.exists():
+            return ""
+
+        return self.render(
+            "voipbox_plugin/device_pool_links.html",
+            extra_context={"pools": pools},
+        )
+
+
+template_extensions = [
+    TenantPhoneNumberSummary,
+    DevicePoolLink,
+]
