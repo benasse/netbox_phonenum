@@ -45,6 +45,14 @@
                             {% endif %}
                         </div>
                         <div class="col-md-6">
+                            <div class="text-muted">{% trans "Device" %}</div>
+                            {% if object.device %}
+                                <a href="{{ object.device.get_absolute_url }}">{{ object.device }}</a>
+                            {% else %}
+                                <span class="text-muted">None</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
                             <div class="text-muted">{% trans "Provider" %}</div>
                             {% if object.provider %}
                                 <a href="{{ object.provider.get_absolute_url }}">{{ object.provider }}</a>
